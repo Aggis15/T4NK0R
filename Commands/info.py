@@ -47,14 +47,19 @@ class info(commands.Cog):
         isBoosting = "Yes" if user.premium_since is True else "No"
         cur.execute(f"SELECT currentlevel FROM {tableName} where userid = {user.id}")
         currentLevel = cur.fetchall()
-        currentLevel = currentLevel[0][0] if currentLevel else 0
+        currentLevel = currentLevel[0][0] if currentLevel else "Null"
         cur.execute(f"SELECT currentxp FROM {tableName} where userid = {user.id}")
         currentXP = cur.fetchall()
-        currentXP = currentXP[0][0] if currentXP else 0
-        untilLevelUp = currentXP - self.startingXP
+        currentXP = currentXP[0][0] if currentXP else "Null"
+        cur.execute(f"SELECT neededxp FROM {tableName} where userid = {user.id}")
+        untilLevelUp = cur.fetchall()
+        untilLevelUp = untilLevelUp[0][0] if untilLevelUp else "Null"
         cur.execute(f"SELECT doNotify FROM {tableName} where userid = {user.id}")
         doNotify = cur.fetchall()
-        doNotify = "Yes" if doNotify[0][0] is True else "No"
+        try:
+            doNotify = "Yes" if doNotify[0][0] is True else "No"
+        except:
+            doNotify = "Null"
         defaultImage = Image.open("./Images/infoImage.png")
         # If the user's avatar is not in the cache, download it
         if not os.path.isfile(f"./Images/avatarCache/{user.id}"):
@@ -89,10 +94,12 @@ class info(commands.Cog):
         draw.text((305, 280), str(untilLevelUp), (157, 156, 157), font=font)
         if doNotify == "No":
             draw.text((521, 332), doNotify, (255, 0, 0), font=font)
-        else:
+        elif doNotify == "Yes":
             draw.text((521, 332), doNotify, (0, 255, 0), font=font)
+        else:
+            draw.text((521, 332), doNotify, (157, 156, 157), font=font)
         avatar = Image.open(f"./Images/avatarCache/{user.id}.png")
-        defaultImage.paste(avatar, (42, 45), avatar)
+        defaultImage.paste(avatar, (40, 45), avatar)
         defaultImage.save("./Images/infoImageReady.png")
         await ctx.respond(file=discord.File("./Images/infoImageReady.png"))
 

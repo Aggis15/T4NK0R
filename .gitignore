@@ -1,2 +1,7 @@
 .env
 logs.log
+test.py
+/.idea/
+/Images/avatarCache/
+/Images/infoImageReady.png
+/Images/levelImageReady.png
