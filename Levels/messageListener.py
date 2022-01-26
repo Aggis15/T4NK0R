@@ -111,9 +111,9 @@ class MessageListener(commands.Cog):
                         levelFont = ImageFont.truetype("Bungee-Regular.ttf", 20)
                         xpFont = ImageFont.truetype("Bungee-Regular.ttf", 18)
                         untilLevelUpFont = ImageFont.truetype("Bungee-Regular.ttf", 16)
-                        draw.text((234, 94), f"{level}", (255,255,255), font=levelFont)
-                        draw.text((185, 55), str(xp), (255,255,255), font=xpFont)
-                        draw.text((271, 31), str(untilLevelUp), (255,255,255), font=untilLevelUpFont)
+                        draw.text((234, 94), f"{level}", (255, 255, 255), font=levelFont)
+                        draw.text((185, 55), str(xp), (255, 255, 255), font=xpFont)
+                        draw.text((271, 31), str(untilLevelUp), (255, 255, 255), font=untilLevelUpFont)
                         # Add the image, then save
                         resizedAvatar = Image.open(f"./Images/avatarCache/{message.author.id}.png")
                         defaultImage.paste(resizedAvatar, (27, 25), resizedAvatar)
@@ -122,6 +122,7 @@ class MessageListener(commands.Cog):
                         await levelupChannel.send(f"{message.author.mention} You have reached the next level!", file=discord.File("./Images/levelImageReady.png"))
                 logger.info(f"{message.author.name} with ID: {message.author.id} has logged {xp_val} XP")
         conn.commit()
+
 
 def setup(bot):
     bot.add_cog(MessageListener(bot))
