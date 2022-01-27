@@ -14,7 +14,7 @@ botToken = os.environ.get("botToken")
 prefix = data["prefix"]
 
 # Initiate the bot
-intents = discord.Intents.default()
+intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 
 
