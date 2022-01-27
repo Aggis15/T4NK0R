@@ -41,7 +41,5 @@ class Notifications(commands.Cog):
         logger.info(f"{ctx.author.name} turned their notifications {value}!")
 
 
-
-
 def setup(bot):
     bot.add_cog(Notifications(bot))

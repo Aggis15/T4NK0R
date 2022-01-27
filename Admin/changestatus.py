@@ -16,20 +16,23 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Public vars
-statuses = data["Statuses"]
-statusName = r.choice(statuses)
+
+
 guildID = data["guildID"][0]
 T4NK0RStaff = data["roleIDs"]["T4NK0RStaff"]
-
+statuses = data["statuses"]
 class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.statusloop.start()
 
-    @tasks.loop(hours=4.0)
+
+
+    @tasks.loop(hours=1.0)
     async def statusloop(self):
+        statusName = r.choice(statuses)
         await self.bot.change_presence(activity=discord.Game(name=statusName))
-        logger.info(f"Status changed to {statusName}")
+        logger.info(f"Status changed to '{statusName}'")
 
     @statusloop.before_loop
     async def beforeStatusLoop(self):
@@ -38,9 +41,12 @@ class Status(commands.Cog):
 
     @slash_command(guild_ids=[guildID], description="A way to change the status on the bot! Usable only by staff.")
     @permissions.has_role(T4NK0RStaff)
-    async def changestatus(self, ctx, status: Option(str, description="Your status name", default=statusName), time: Option(int, required=False, description="How long the status should last, in seconds. Default is 4 hours.", default=4)):
+    async def changestatus(self, ctx, status: Option(str, description="Your status name", required=False), time: Option(int, required=False, description="How long the status should last, in seconds. Default is 4 hours.", default=14400)):
+        if status is None:
+            status = r.choice(statuses)
         self.statusloop.cancel()
         await self.bot.change_presence(activity=discord.Game(name=status))
+        await ctx.respond(f"Status has been successfully changed to {status} for {time} seconds!")
         await asyncio.sleep(float(time))
         await self.statusloop.start()
 
