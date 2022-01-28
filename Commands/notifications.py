@@ -23,8 +23,8 @@ cur = conn.cursor()
 # Initiate json
 file = open("config.json")
 data = json.load(file)
-
 guildID = data["guildID"][0]
+
 
 class Notifications(commands.Cog):
     def __init__(self, bot):
