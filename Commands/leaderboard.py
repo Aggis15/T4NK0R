@@ -40,7 +40,7 @@ class Leaderboard(commands.Cog):
         xpList = []
         levelList = []
         counter = 0
-        embed = discord.Embed(title="Server Leaderboard", description="# • Name • XP • Level", color=discord.Color.blue())
+        embed = discord.Embed(title="Server Leaderboard", description="**# • Name • XP • Level**", color=discord.Color.blue())
         for people in res:
             name = people[0]
             xp = people[1]
@@ -50,7 +50,6 @@ class Leaderboard(commands.Cog):
             levelList.append(level)
             counter = counter + 1
             embed.add_field(name="\u200b", value=f"#{counter} • {name} • {xp} • {level}", inline=False)
-
         await ctx.respond(embed=embed)
 
 

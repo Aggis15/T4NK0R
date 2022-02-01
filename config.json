@@ -29,6 +29,9 @@
     "T4NK0RStaff": "T4NK0R 0P",
     "visitorRole": 643944033986674689
   },
+  "emojiIDs": {
+    "warningTSE": "<:TSEWarning:916669190868463626>"
+  },
   "XP": {
     "startingXP": 500
   },

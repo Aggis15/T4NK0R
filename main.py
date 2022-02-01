@@ -39,4 +39,8 @@ for filename in os.listdir("./Admin"):
     if filename.endswith(".py"):
         bot.load_extension(f"Admin.{filename[:-3]}")
 
+#for filename in os.listdir("./Twitch"):
+#    if filename.endswith(".py"):
+#        bot.load_extension(f"Twitch.{filename[:-3]}")
+
 bot.run(botToken)
