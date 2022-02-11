@@ -1,0 +1,17 @@
+aiohttp==3.7.4.post0
+async-timeout==3.0.1
+attrs==21.4.0
+certifi==2021.10.8
+chardet==4.0.0
+charset-normalizer==2.0.11
+idna==3.3
+multidict==6.0.2
+Pillow==9.0.1
+psycopg2-binary==2.9.3
+py-cord @ git+https://github.com/Pycord-Development/pycord@b183d199cc2b15a761f6e2b5fb4fc886f19b1629
+python-dotenv==0.19.2
+python-resize-image==1.1.20
+requests==2.27.1
+typing-extensions==4.0.1
+urllib3==1.26.8
+yarl==1.7.2
