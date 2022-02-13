@@ -3,6 +3,7 @@ from discord.ext import commands
 import json
 import os
 from dotenv import load_dotenv
+import asyncpg
 load_dotenv()
 
 # Initiate json
@@ -17,10 +18,13 @@ prefix = data["prefix"]
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 
+#async def create_connection_pool():
+#    bot.pg_conn = await asyncpg.create_pool('postgres://devuser:postgres@localhost:5432/devdb')
 
 @bot.event
 async def on_ready():
     print(f"Bot has successfully started as {bot.user}")
+
 
 # Loads the cogs
 for filename in os.listdir("./Join_Leave_Listeners"):

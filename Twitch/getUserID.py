@@ -39,6 +39,10 @@ class getUserID(commands.Cog):
         await ctx.respond(f"{user}'s ID is {userID}")
         logger.info(f"{ctx.author} used getuserid command for {user}")
 
+    @getuserid.error
+    async def getuserid_error(self, ctx, error):
+        await ctx.respond(f"`{error}`")
+
 
 def setup(bot):
     bot.add_cog(getUserID(bot))

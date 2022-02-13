@@ -4,7 +4,7 @@ import json
 import random as r
 from dotenv import load_dotenv
 import os
-import psycopg2
+import asyncpg
 import logging
 from PIL import Image, ImageFont, ImageDraw
 from resizeimage import resizeimage
@@ -31,8 +31,6 @@ tableName = os.environ.get("tableName")
 startingXP = data["XP"]["startingXP"]
 whitelistChannels = data["whitelistChannels"]
 levelupChat = data["channelIDs"]["levelupChat"]
-conn = psycopg2.connect(host=dbHost, database=dbName, user=dbUser, password=dbPass, port=dbPort)
-cur = conn.cursor()
 
 
 class MessageListener(commands.Cog):
@@ -48,6 +46,7 @@ class MessageListener(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        conn = await asyncpg.create_pool(f'postgres://{dbUser}:{dbPass}@{dbHost}:{dbPort}/{dbName}')
         await self.bot.process_commands(message)
         if message.author.bot:
             return
@@ -59,33 +58,19 @@ class MessageListener(commands.Cog):
             retry_after = bucket.update_rate_limit()
             if not retry_after:
                 xp_val = self.xp()
-                cur.execute(f"INSERT INTO {tableName} (username, userid, currentxp, neededxp) VALUES ('{message.author.name}', {message.author.id}, {xp_val}, {startingXP})  ON CONFLICT (userid) DO UPDATE SET currentxp = {tableName}.currentxp + {xp_val}")
-                conn.commit()
-                cur.execute(f"SELECT currentxp FROM {tableName} WHERE userid = {message.author.id}")
-                xp = cur.fetchall()
-                xp = xp[0][0]
-                cur.execute(f"UPDATE {tableName} SET neededxp = {tableName}.neededxp - {xp_val}")
-                cur.execute(f"SELECT neededxp FROM {tableName} WHERE userid = {message.author.id}")
-                neededXP = cur.fetchall()
-                neededXP = neededXP[0][0]
+                await conn.execute(f"INSERT INTO {tableName} (username, userid, currentxp, neededxp) VALUES ('{message.author.name}', {message.author.id}, {xp_val}, {startingXP})  ON CONFLICT (userid) DO UPDATE SET currentxp = {tableName}.currentxp + {xp_val}")
+                xp = await conn.fetchval(f"SELECT currentxp FROM {tableName} WHERE userid = {message.author.id}")
+                await conn.execute(f"UPDATE {tableName} SET neededxp = {tableName}.neededxp - {xp_val} WHERE userid = {message.author.id}")
+                neededXP = await conn.fetchval(f"SELECT neededxp FROM {tableName} WHERE userid = {message.author.id}")
                 if neededXP <= 0:
-                    cur.execute(f"UPDATE {tableName} SET currentlevel = {tableName}.currentlevel + 1 WHERE userid = {message.author.id}")
-
-                    cur.execute(f"SELECT currentlevel FROM {tableName} WHERE userid = {message.author.id}")
-                    level = cur.fetchall()
-                    level = level[0][0]
+                    await conn.execute(f"UPDATE {tableName} SET currentlevel = {tableName}.currentlevel + 1 WHERE userid = {message.author.id}")
+                    level = await conn.fetchval(f"SELECT currentlevel FROM {tableName} WHERE userid = {message.author.id}")
                     untilLevelUp = int(str(xp)[-2:])
                     untilLevelUp = startingXP * level - untilLevelUp
-                    cur.execute(f"UPDATE {tableName} SET neededxp = {untilLevelUp} WHERE userid = {message.author.id}")
-                    conn.commit()
-                    cur.execute(f"SELECT doNotify FROM {tableName} WHERE userid = {message.author.id}")
-                    notify = cur.fetchall()
-                    notify = notify[0][0]
-                    conn.commit()
+                    await conn.execute(f"UPDATE {tableName} SET neededxp = {untilLevelUp} WHERE userid = {message.author.id}")
+                    notify = await conn.fetchval(f"SELECT doNotify FROM {tableName} WHERE userid = {message.author.id}")
                     if notify:
-                        cur.execute(f"SELECT neededxp FROM {tableName} WHERE userid = {message.author.id}")
-                        untilLevelUp = cur.fetchall()
-                        untilLevelUp = untilLevelUp[0][0]
+                        untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {tableName} WHERE userid = {message.author.id}")
                         # Edit the default image to add the text then send it
                         defaultImage = Image.open("./Images/levelImage.png")
                         getAvatar = requests.get(message.author.avatar.url)
@@ -121,7 +106,7 @@ class MessageListener(commands.Cog):
                         levelupChannel = self.bot.get_channel(self.levelupChat)
                         await levelupChannel.send(f"{message.author.mention} You have reached the next level!", file=discord.File("./Images/levelImageReady.png"))
                 logger.info(f"{message.author.name} with ID: {message.author.id} has logged {xp_val} XP")
-        conn.commit()
+        await conn.close()
 
 
 def setup(bot):

@@ -21,6 +21,10 @@ class PingCommand(commands.Cog):
             await ctx.respond(f"Bot latency is `{round(self.bot.latency * 1000)}ms`. That's not so great!")
         logger.info(f"{ctx.author.name} with ID: {ctx.author.id} has checked the bot ping!")
 
+    @ping.error
+    async def ping_error(self, ctx, error):
+        await ctx.respond(f"`{error}`")
+
 
 def setup(bot):
     bot.add_cog(PingCommand(bot))

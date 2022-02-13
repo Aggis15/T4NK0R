@@ -1,5 +1,4 @@
 import logging
-
 import discord
 from discord.ext import commands
 from discord.commands import slash_command
@@ -17,8 +16,9 @@ logger.setLevel(logging.INFO)
 file = open("config.json")
 data = json.load(file)
 
-# Public vars
+# Public variables
 guildID = data["guildID"][0]
+
 
 class serverInfo(commands.Cog):
     def __init__(self, bot):
@@ -69,6 +69,10 @@ class serverInfo(commands.Cog):
         await ctx.respond(file=discord.File("./Images/serverImageReady.png"))
 
         logger.info(f"{ctx.author.name} with ID: {ctx.author.id} has used the info slash command")
+
+    @server.error
+    async def server_error(self, ctx, error):
+        await ctx.respond(f"`{error}`")
 
 
 def setup(bot):

@@ -1,7 +1,7 @@
 import os
-import psycopg2
+import asyncpg
 import discord
-from discord.commands import slash_command, Option
+from discord.commands import slash_command
 from discord.ext import commands
 import logging
 import json
@@ -16,15 +16,13 @@ file = open("config.json")
 data = json.load(file)
 guildID = data["guildID"][0]
 
-# Public vars
+# Public variables
 dbHost = os.environ.get("dbHost")
 dbUser = os.environ.get("dbUser")
 dbPass = os.environ.get("dbPass")
 dbName = os.environ.get("dbName")
 dbPort = os.environ.get("dbPort")
 tableName = os.environ.get("tableName")
-conn = psycopg2.connect(host=dbHost, database=dbName, user=dbUser, password=dbPass, port=dbPort)
-cur = conn.cursor()
 
 
 class Leaderboard(commands.Cog):
@@ -33,9 +31,9 @@ class Leaderboard(commands.Cog):
 
     @slash_command(description="Show the level leaderboard!", guild_ids=[guildID])
     async def leaderboard(self, ctx):
+        conn = await asyncpg.create_pool(f'postgres://{dbUser}:{dbPass}@{dbHost}:{dbPort}/{dbName}')
         global embed
-        cur.execute(f"SELECT username, currentxp, currentlevel FROM {tableName} ORDER BY currentxp DESC")
-        res = cur.fetchall()
+        res = await conn.fetch(f"SELECT username, currentxp, currentlevel FROM {tableName} ORDER BY currentxp DESC")
         nameList = []
         xpList = []
         levelList = []
@@ -51,6 +49,11 @@ class Leaderboard(commands.Cog):
             counter = counter + 1
             embed.add_field(name="\u200b", value=f"#{counter} • {name} • {xp} • {level}", inline=False)
         await ctx.respond(embed=embed)
+        await conn.close()
+
+    @leaderboard.error
+    async def leaderboard_error(self, ctx, error):
+        await ctx.respond(f"`{error}`")
 
 
 def setup(bot):

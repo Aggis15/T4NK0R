@@ -15,18 +15,16 @@ logging.basicConfig(filename='logs.log', filemode='w', format='%(name)s - %(leve
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# Public vars
-
-
+# Public variables
 guildID = data["guildID"][0]
 T4NK0RStaff = data["roleIDs"]["T4NK0RStaff"]
 statuses = data["statuses"]
+
+
 class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.statusloop.start()
-
-
 
     @tasks.loop(hours=1.0)
     async def statusloop(self):
@@ -50,6 +48,9 @@ class Status(commands.Cog):
         await asyncio.sleep(float(time))
         await self.statusloop.start()
 
+    @statusloop.error
+    async def statusloop_error(self, ctx, error):
+        await ctx.respond(f"`{error}`")
 
 def setup(bot):
     bot.add_cog(Status(bot))

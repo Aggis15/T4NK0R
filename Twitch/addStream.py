@@ -17,7 +17,7 @@ logging.basicConfig(filename='logs.log', filemode='w', format='%(name)s - %(leve
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# Public vars
+# Public variables
 twitchClientID = os.environ.get('twitchClientID')
 twitchClientSecret = os.environ.get('twitchClientSecret')
 twitchAccessToken = os.environ.get('twitchAccessToken')
@@ -25,13 +25,14 @@ twitchSecret = os.environ.get('twitchSecret')
 guildID = data["guildID"][0]
 T4NK0RStaff = data["roleIDs"]["T4NK0RStaff"]
 
+
 class addStream(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @slash_command(guild_ids=[guildID], description="Add a stream to the notification list!")
     @permissions.has_role(T4NK0RStaff)
-    async def addstream(self, ctx, userid = Option(str, "Enter the ID. Find it with getuserid", required=True)):
+    async def addstream(self, ctx, userid: Option(str, "Enter the ID. Find it with getuserid", required=True)):
         await ctx.respond("Adding stream... More information will be provided shortly.")
         headers = {"Client-ID": twitchClientID, "Authorization": f"Bearer {twitchAccessToken}", "Content-Type": "application/json"}
         info_json = {
@@ -53,6 +54,11 @@ class addStream(commands.Cog):
             await ctx.respond("Stream added!")
         else:
             await ctx.respond("Stream not added! Please try again.")
+
+    @addstream.error
+    async def addstream_error(self, ctx, error):
+        await ctx.respond(f"`{error}`")
+
 
 def setup(bot):
     bot.add_cog(addStream(bot))

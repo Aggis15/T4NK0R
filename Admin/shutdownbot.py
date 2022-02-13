@@ -2,7 +2,6 @@ import sys
 from discord.ext import commands
 from discord.commands import slash_command, permissions
 import json
-
 import logging
 
 # Initiate json
@@ -14,7 +13,7 @@ logging.basicConfig(filename='logs.log', filemode='w', format='%(name)s - %(leve
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# Public vars
+# Public variables
 guildID = data["guildID"][0]
 T4NK0RStaff = data["roleIDs"]["T4NK0RStaff"]
 warningTSE = data["emojiIDs"]["warningTSE"]
@@ -38,6 +37,11 @@ class rebootBot(commands.Cog):
         if verification.content == "Yes, I agree to killing the bot!":
             await ctx.respond("Bot is dying. Goodbye.")
             sys.exit()
+
+    @shutdownbot.error
+    async def shutdown_error(self, ctx, error):
+        await ctx.respond(f"`{error}`")
+
 
 def setup(bot):
     bot.add_cog(rebootBot(bot))

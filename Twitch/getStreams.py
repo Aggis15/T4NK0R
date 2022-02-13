@@ -38,6 +38,10 @@ class getStreams(commands.Cog):
         await ctx.respond(f"```{get_request.text}```")
         logger.info(f"{ctx.author} used getstreams command")
 
+    @getstreams.error
+    async def getstreams_error(self, ctx, error):
+        await ctx.respond(f"`{error}`")
+
 
 def setup(bot):
     bot.add_cog(getStreams(bot))
