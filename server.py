@@ -5,16 +5,16 @@ import hashlib
 from dotenv import load_dotenv, set_key
 import os
 import requests as r
-from discord_webhook import DiscordWebhook, DiscordEmbed
+from discord_WEBHOOK_URL import DiscordWEBHOOK_URL, DiscordEmbed
 load_dotenv()
 # Public vars
 app = Flask(__name__)
-secret = os.environ.get('twitchSecret')
-twitchClientID = os.environ.get('twitchClientID')
-twitchClientSecret = os.environ.get('twitchClientSecret')
-twitchAccessToken = os.environ.get('twitchAccessToken')
-webhook = os.environ.get('webhook')
-webhook = DiscordWebhook(url=webhook)
+secret = os.environ.get('TWITCH_SECRET')
+TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
+TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
+TWITCH_ACCESS_TOKEN = os.environ.get('TWITCH_ACCESS_TOKEN')
+WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
+WEBHOOK_URL = DiscordWEBHOOK_URL(url=WEBHOOK_URL)
 
 
 @app.route("/")
@@ -25,7 +25,7 @@ def root():
 @app.route("/twitch/live", methods=["POST"])
 def twitchPost():
     requestJson = request.json
-    if "webhook_callback_verification" in request.headers["Twitch-Eventsub-Message-Type"]:
+    if "WEBHOOK_URL_callback_verification" in request.headers["Twitch-Eventsub-Message-Type"]:
         response = Response(requestJson["challenge"], status=200)
         response.headers["Content-Type"] = "application/json"
         return response
@@ -40,14 +40,14 @@ def twitchPost():
             print(signature)
             print(twitchSignature)
             userID = requestJson["event"]["broadcaster_user_id"]
-            headers = {"Client-ID": twitchClientID, "Authorization": f"Bearer {twitchAccessToken}"}
+            headers = {"Client-ID": TWITCH_CLIENT_ID, "Authorization": f"Bearer {TWITCH_ACCESS_TOKEN}"}
             req = r.get(f"https://api.twitch.tv/helix/streams?user_id={userID}", headers=headers)
             if req.status_code == 401:
                 print("401. retrying...")
-                get_new_key = r.post(f"https://id.twitch.tv/oauth2/token?client_id={twitchClientID}&client_secret={twitchClientSecret}&grant_type=client_credentials")
+                get_new_key = r.post(f"https://id.twitch.tv/oauth2/token?client_id={TWITCH_CLIENT_ID}&client_secret={TWITCH_CLIENT_SECRET}&grant_type=client_credentials")
                 access_token = get_new_key.json()["access_token"]
-                set_key(".env", "twitchAccessToken", access_token)
-                headers = {"Client-ID": twitchClientID, "Authorization": f"Bearer {access_token}"}
+                set_key(".env", "TWITCH_ACCESS_TOKEN", access_token)
+                headers = {"Client-ID": TWITCH_CLIENT_ID, "Authorization": f"Bearer {access_token}"}
                 req = r.get(f"https://api.twitch.tv/helix/streams?user_id={userID}", headers=headers)
             req = json.loads(req.text)
             name = req["data"][0]["user_name"]
@@ -65,8 +65,8 @@ def twitchPost():
             embed.add_embed_field(name="Stream Title", value=title, inline=True)
             embed.add_embed_field(name="Viewers", value=viewers, inline=True)
             embed.add_embed_field(name="Currently Playing", value=game, inline=True)
-            webhook.add_embed(embed)
-            webhook.execute()
+            WEBHOOK_URL.add_embed(embed)
+            WEBHOOK_URL.execute()
             return Response(status=200)
 
         else:

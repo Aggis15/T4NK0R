@@ -18,9 +18,9 @@ logger.setLevel(logging.INFO)
 
 
 # Public Variables
-twitchClientID = os.environ.get('twitchClientID')
-twitchClientSecret = os.environ.get('twitchClientSecret')
-twitchAccessToken = os.environ.get('twitchAccessToken')
+TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
+TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
+TWITCH_ACCESS_TOKEN = os.environ.get('TWITCH_ACCESS_TOKEN')
 T4NK0RStaff = data["roleIDs"]["T4NK0RStaff"]
 guildID = data["guildID"][0]
 
@@ -33,7 +33,7 @@ class getStreams(commands.Cog):
     @permissions.has_role(T4NK0RStaff)
     async def getstreams(self, ctx):
         endpoint = "https://api.twitch.tv/helix/eventsub/subscriptions"
-        headers = {"Client-ID": twitchClientID, "Authorization": f"Bearer {twitchAccessToken}", "Content-Type": "application/json"}
+        headers = {"Client-ID": TWITCH_CLIENT_ID, "Authorization": f"Bearer {TWITCH_ACCESS_TOKEN}", "Content-Type": "application/json"}
         get_request = r.get(url=endpoint, headers=headers)
         await ctx.respond(f"```{get_request.text}```")
         logger.info(f"{ctx.author} used getstreams command")

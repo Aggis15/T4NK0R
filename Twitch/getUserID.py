@@ -18,9 +18,9 @@ logger.setLevel(logging.INFO)
 
 
 # Public Variables
-twitchClientID = os.environ.get('twitchClientID')
-twitchClientSecret = os.environ.get('twitchClientSecret')
-twitchAccessToken = os.environ.get('twitchAccessToken')
+TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
+TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
+TWITCH_ACCESS_TOKEN = os.environ.get('TWITCH_ACCESS_TOKEN')
 T4NK0RStaff = data["roleIDs"]["T4NK0RStaff"]
 guildID = data["guildID"][0]
 
@@ -32,7 +32,7 @@ class getUserID(commands.Cog):
     @slash_command(guild_ids=[guildID], description="Get the user ID of a Twitch user. Useful for adding streams.")
     @permissions.has_role(T4NK0RStaff)
     async def getuserid(self, ctx, user: Option(str, "Enter the username", required=True)):
-        headers = {"Client-ID": twitchClientID, "Authorization": f"Bearer {twitchAccessToken}"}
+        headers = {"Client-ID": TWITCH_CLIENT_ID, "Authorization": f"Bearer {TWITCH_ACCESS_TOKEN}"}
         req = r.get(f"https://api.twitch.tv/helix/users?login={user}", headers=headers)
         req = json.loads(req.text)
         userID = req["data"][0]["id"]

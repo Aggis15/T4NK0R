@@ -17,9 +17,9 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Public variables
-twitchClientID = os.environ.get('twitchClientID')
-twitchClientSecret = os.environ.get('twitchClientSecret')
-twitchAccessToken = os.environ.get('twitchAccessToken')
+TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
+TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
+TWITCH_ACCESS_TOKEN = os.environ.get('TWITCH_ACCESS_TOKEN')
 guildID = data["guildID"][0]
 T4NK0RStaff = data["roleIDs"]["T4NK0RStaff"]
 
@@ -30,7 +30,7 @@ class removeStream(commands.Cog):
     @slash_command(guild_ids=[guildID], description="Remove a stream from the notification list!")
     @permissions.has_role(T4NK0RStaff)
     async def removestream(self, ctx, requestid: Option(str, "Enter the user ID. Find it with the getuserid command", required=True)):
-        headers = {"Client-ID": twitchClientID, "Authorization": f"Bearer {twitchAccessToken}", "Content-Type": "application/json"}
+        headers = {"Client-ID": TWITCH_CLIENT_ID, "Authorization": f"Bearer {TWITCH_ACCESS_TOKEN}", "Content-Type": "application/json"}
         r.delete(f"https://api.twitch.tv/helix/eventsub/subscriptions?id={requestid}", headers=headers)
         get_stream_request = r.get("https://api.twitch.tv/helix/eventsub/subscriptions", headers=headers)
         await ctx.respond(f"```{get_stream_request.text}```")
