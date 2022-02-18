@@ -20,14 +20,14 @@ class musicStop(commands.Cog):
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         wavelink.NodePool.get_node(identifier=node.identifier)
 
-    @slash_command(guild_ids=[guildID], description="Resume the song!")
-    async def disconnect(self, ctx):
+    @slash_command(guild_ids=[guildID], description="Stop the music!")
+    async def stop(self, ctx):
         if not ctx.voice_client:
-            await ctx.respond("You need to be in a voice channel to use this command!")
+            await ctx.respond("I'm not playing anything right now!")
         else:
             vc: wavelink.Player = ctx.voice_client
-            await vc.disconnect()
-            await ctx.respond("Disconnected from voice channel!")
+            await vc.stop()
+            await ctx.respond("Music stopped!")
 
 
 def setup(bot):
