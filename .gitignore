@@ -1,5 +1,5 @@
 .env
-logs.log
+./logs/discordlogs.log
 test.py
 /.idea/
 /Images/avatarCache/
