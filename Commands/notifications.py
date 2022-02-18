@@ -6,17 +6,17 @@ import logging
 import json
 
 # Logging
-logging.basicConfig(filename='logs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='./logs/discordlogs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Public Variables
-dbHost = os.environ.get("dbHost")
-dbUser = os.environ.get("dbUser")
-dbPass = os.environ.get("dbPass")
-dbName = os.environ.get("dbName")
-dbPort = os.environ.get("dbPort")
-tableName = os.environ.get("tableName")
+DB_HOST = os.environ.get("DB_HOST")
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
+DB_NAME = os.environ.get("DB_NAME")
+DB_PORT = os.environ.get("DB_PORT")
+TABLE_NAME = os.environ.get("TABLE_NAME")
 
 
 # Initiate json
@@ -31,11 +31,11 @@ class Notifications(commands.Cog):
 
     @slash_command(description="Turn bot notifications on or off! Default is on!", guild_ids=[guildID])
     async def notifications(self, ctx, value: Option(str, "Make your choice!", choices=["on", "off"])):
-        conn = await asyncpg.create_pool(f'postgres://{dbUser}:{dbPass}@{dbHost}:{dbPort}/{dbName}')
+        conn = await asyncpg.connect(f'postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
         if value == "off":
-            await conn.execute(f"UPDATE {tableName} SET doNotify = false WHERE userid = {ctx.author.id}")
+            await conn.execute(f"UPDATE {TABLE_NAME} SET doNotify = false WHERE userid = {ctx.author.id}")
         else:
-            await conn.execute(f"UPDATE {tableName} SET doNotify = true WHERE userid = {ctx.author.id}")
+            await conn.execute(f"UPDATE {TABLE_NAME} SET doNotify = true WHERE userid = {ctx.author.id}")
         await ctx.respond(f"Notifications have now been turned {value}")
         await conn.close()
         logger.info(f"{ctx.author.name} turned their notifications {value}!")

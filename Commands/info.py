@@ -13,7 +13,7 @@ load_dotenv()
 
 
 # Logging
-logging.basicConfig(filename='logs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='./logs/discordlogs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -24,12 +24,12 @@ data = json.load(file)
 # Public Variables
 guildID = data["guildID"][0]
 startingXP = data["XP"]["startingXP"]
-dbHost = os.environ.get("dbHost")
-dbUser = os.environ.get("dbUser")
-dbPass = os.environ.get("dbPass")
-dbName = os.environ.get("dbName")
-dbPort = os.environ.get("dbPort")
-tableName = os.environ.get("tableName")
+DB_HOST = os.environ.get("DB_HOST")
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
+DB_NAME = os.environ.get("DB_NAME")
+DB_PORT = os.environ.get("DB_PORT")
+TABLE_NAME = os.environ.get("TABLE_NAME")
 
 
 class info(commands.Cog):
@@ -38,16 +38,16 @@ class info(commands.Cog):
         self.startingXP = startingXP
 
     @slash_command(guild_ids=[guildID], description="A command to check yours or someone else's profile information!")
-    async def info(self, ctx, user: Option(discord.Member, required=True, description="Choose the member you want to look at, or leave blank if you want to see info about yourself!")):
-        conn = await asyncpg.create_pool(f'postgres://{dbUser}:{dbPass}@{dbHost}:{dbPort}/{dbName}')
+    async def info(self, ctx, user: Option(discord.Member, required=False, description="Choose the member you want to look at, or leave blank if you want to see info about yourself!")):
+        conn = await asyncpg.connect(f'postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
         user = user if user is not None else ctx.author
         accountCreatedAt = f"{user.created_at.strftime('%d/%m/%y')}"
         joinedServerAt = f"{user.joined_at.strftime('%d/%m/%y')}"
         isBoosting = "Yes" if user.premium_since is True else "No"
-        currentLevel = await conn.fetchval(f"SELECT currentlevel FROM {tableName} where userid = {user.id}")
-        currentXP = await conn.fetchval(f"SELECT currentxp FROM {tableName} where userid = {user.id}")
-        untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {tableName} where userid = {user.id}")
-        doNotify = await conn.fetchval(f"SELECT doNotify FROM {tableName} where userid = {user.id}")
+        currentLevel = await conn.fetchval(f"SELECT currentlevel FROM {TABLE_NAME} where userid = {user.id}")
+        currentXP = await conn.fetchval(f"SELECT currentxp FROM {TABLE_NAME} where userid = {user.id}")
+        untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {TABLE_NAME} where userid = {user.id}")
+        doNotify = await conn.fetchval(f"SELECT doNotify FROM {TABLE_NAME} where userid = {user.id}")
         defaultImage = Image.open("./Images/infoImage.png")
         # If the user's avatar is not in the cache, download it
         if not os.path.isfile(f"./Images/avatarCache/{user.id}"):

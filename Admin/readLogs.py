@@ -19,7 +19,7 @@ class ReadLogs(commands.Cog):
     @slash_command(guild_ids=[guildID], description="Get a copy of the log file. Useful for troubleshooting")
     @permissions.has_role(T4NK0RStaff)
     async def readlogs(self, ctx):
-        await ctx.respond(file=discord.File("logs.log"))
+        await ctx.respond(file=discord.File("./logs/discordlogs.log"))
 
     @readlogs.error
     async def readlogs_error(self, ctx, error):
