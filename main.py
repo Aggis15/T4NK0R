@@ -20,8 +20,6 @@ data = json.load(file)
 # Public vars
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 prefix = data["prefix"]
-SPOTIFY_CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
-SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
 
 # Initiate the bot
 intents = discord.Intents().all()
@@ -33,9 +31,7 @@ async def on_ready():
     await wavelink.NodePool.create_node(bot=bot,
                                         host='0.0.0.0',
                                         port=2333,
-                                        password='a579c5f06b24f0e61f18b8226d414ed3',
-                                        spotify_client=spotify.SpotifyClient(client_id=SPOTIFY_CLIENT_ID,
-                                                                             client_secret=SPOTIFY_CLIENT_SECRET))
+                                        password='a579c5f06b24f0e61f18b8226d414ed3')
 
 @bot.event
 async def on_wavelink_node_ready(node: wavelink.Node):

@@ -1,8 +1,8 @@
+import asyncio
 import discord
 from discord.ext import commands
 from discord.commands import slash_command, Option
 import wavelink
-from wavelink.ext import spotify
 import json
 from dotenv import load_dotenv
 import os
@@ -14,8 +14,6 @@ data = json.load(file)
 
 # Public variables
 guildID = data["guildID"][0]
-SPOTIFY_CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
-SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
 
 
 class musicPlay(commands.Cog):
@@ -30,6 +28,7 @@ class musicPlay(commands.Cog):
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track: wavelink.Track, reason):
         """When a track ends, check if there is another one in the queue."""
+        await asyncio.sleep(5)
         if not player.queue.is_empty:
             next_track = player.queue.get()
             await player.play(next_track)

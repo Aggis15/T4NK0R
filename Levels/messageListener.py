@@ -48,7 +48,7 @@ class MessageListener(commands.Cog):
     async def on_message(self, message):
         await self.bot.process_commands(message)
         conn = await asyncpg.connect(f'postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
-
+        levelNameAfterLevelUp = ""
         if message.author.bot:
             return
         elif message.channel.id in whitelistChannels:
@@ -66,6 +66,11 @@ class MessageListener(commands.Cog):
                 if neededXP <= 0:
                     await conn.execute(f"UPDATE {TABLE_NAME} SET currentlevel = {TABLE_NAME}.currentlevel + 1 WHERE userid = {message.author.id}")
                     level = await conn.fetchval(f"SELECT currentlevel FROM {TABLE_NAME} WHERE userid = {message.author.id}")
+                    for levelNames in data["levelNames"]:
+                        if level >= int(levelNames):
+                            levelNameAfterLevelUp = data["levelNames"][levelNames]
+                            break
+                    await conn.execute(f"UPDATE {TABLE_NAME} SET levelname = '{levelNameAfterLevelUp}' WHERE userid = {message.author.id}")
                     untilLevelUp = int(str(xp)[-2:])
                     untilLevelUp = startingXP * level - untilLevelUp
                     await conn.execute(f"UPDATE {TABLE_NAME} SET neededxp = {untilLevelUp} WHERE userid = {message.author.id}")

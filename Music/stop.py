@@ -20,7 +20,7 @@ class musicStop(commands.Cog):
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         wavelink.NodePool.get_node(identifier=node.identifier)
 
-    @slash_command(guild_ids=[guildID], description="Stop the music!")
+    @slash_command(guild_ids=[guildID], description="Stop the music! If there is anything in the queue, plays the next song!")
     async def stop(self, ctx):
         if not ctx.voice_client:
             await ctx.respond("I'm not playing anything right now!")
