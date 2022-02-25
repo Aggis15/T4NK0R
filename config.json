@@ -27,7 +27,13 @@
   ],
   "roleIDs": {
     "T4NK0RStaff": "T4NK0R 0P",
-    "visitorRole": 643944033986674689
+    "visitorRole": 643944033986674689,
+    "deepthinkers": 643947293913120768,
+    "lockdown": 703286743721443358,
+    "notifiedLive": 810427091191070721,
+    "events": 734790263259660318,
+    "gamers": 667347624893874195,
+    "voters": 940073744586657823
   },
   "emojiIDs": {
     "warningTSE": "<:TSEWarning:916669190868463626>"

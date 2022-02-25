@@ -46,6 +46,7 @@ class info(commands.Cog):
         isBoosting = "Yes" if user.premium_since is True else "No"
         currentLevel = await conn.fetchval(f"SELECT currentlevel FROM {TABLE_NAME} where userid = {user.id}")
         currentXP = await conn.fetchval(f"SELECT currentxp FROM {TABLE_NAME} where userid = {user.id}")
+        currentLevelName = await conn.fetchval(f"SELECT levelname FROM {TABLE_NAME} where userid = {user.id}")
         untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {TABLE_NAME} where userid = {user.id}")
         doNotify = await conn.fetchval(f"SELECT doNotify FROM {TABLE_NAME} where userid = {user.id}")
         defaultImage = Image.open("./Images/infoImage.png")
@@ -77,7 +78,7 @@ class info(commands.Cog):
             draw.text((383, 120), isBoosting, (255, 0, 0), font=font)
         else:
             draw.text((383, 128), isBoosting, (0, 255, 0), font=font)
-        draw.text((182, 176), str(currentLevel), (157, 156, 157), font=font)
+        draw.text((182, 176), f"{currentLevel} ({currentLevelName})", (157, 156, 157), font=font)
         draw.text((108, 229), str(currentXP), (157, 156, 157), font=font)
         draw.text((305, 280), str(untilLevelUp), (157, 156, 157), font=font)
         if doNotify:
