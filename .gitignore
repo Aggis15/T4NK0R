@@ -2,10 +2,7 @@
 ./logs/discordlogs.log
 test.py
 /.idea/
-/Images/avatarCache/
-/Images/infoImageReady.png
-/Images/levelImageReady.png
-/Images/serverImageReady.png
+/Images/
 /Lavalink.jar
 /application.yml
 /Bungee-Regular.ttf
