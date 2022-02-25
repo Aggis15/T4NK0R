@@ -42,11 +42,14 @@ class Status(commands.Cog):
     async def changestatus(self, ctx, status: Option(str, description="Your status name", required=False), time: Option(int, required=False, description="How long the status should last, in seconds. Default is 4 hours.", default=14400)):
         if status is None:
             status = r.choice(statuses)
-        self.statusloop.cancel()
-        await self.bot.change_presence(activity=discord.Game(name=status))
-        await ctx.respond(f"Status has been successfully changed to {status} for {time} seconds!")
-        await asyncio.sleep(float(time))
-        await self.statusloop.start()
+        if self.statusloop.is_running() is True:
+            self.statusloop.cancel()
+            await self.bot.change_presence(activity=discord.Game(name=status))
+            await ctx.respond(f"Status has been successfully changed to {status} for {time} seconds!")
+            await asyncio.sleep(float(time))
+            await self.statusloop.start()
+        else:
+            await ctx.respond(f"Status change is already in progress.")
 
     @statusloop.error
     async def statusloop_error(self, ctx, error):
