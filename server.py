@@ -5,8 +5,9 @@ import hashlib
 from dotenv import load_dotenv, set_key
 import os
 import requests as r
-from discord_WEBHOOK_URL import DiscordWEBHOOK_URL, DiscordEmbed
+from discord_webhook import DiscordWebhook, DiscordEmbed
 load_dotenv()
+import os
 # Public vars
 app = Flask(__name__)
 secret = os.environ.get('TWITCH_SECRET')
@@ -14,11 +15,11 @@ TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
 TWITCH_ACCESS_TOKEN = os.environ.get('TWITCH_ACCESS_TOKEN')
 WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
-WEBHOOK_URL = DiscordWEBHOOK_URL(url=WEBHOOK_URL)
+WEBHOOK_URL = DiscordWebhook(url=WEBHOOK_URL)
 
 
 @app.route("/")
-def root():
+def index():
     return "The website is working!"
 
 
