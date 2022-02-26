@@ -27,7 +27,7 @@ DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME")
 DB_PORT = os.environ.get("DB_PORT")
-TABLE_NAME = os.environ.get("TABLE_NAME")
+LEVEL_TABLE_NAME = os.environ.get("LEVEL_TABLE_NAME")
 startingXP = data["XP"]["startingXP"]
 whitelistChannels = data["whitelistChannels"]
 levelupChat = data["channelIDs"]["levelupChat"]
@@ -59,24 +59,24 @@ class MessageListener(commands.Cog):
             retry_after = bucket.update_rate_limit()
             if not retry_after:
                 xp_val = self.xp()
-                await conn.execute(f"INSERT INTO {TABLE_NAME} (username, userid, currentxp, neededxp) VALUES ('{message.author.name}', {message.author.id}, {xp_val}, {startingXP})  ON CONFLICT (userid) DO UPDATE SET currentxp = {TABLE_NAME}.currentxp + {xp_val}")
-                xp = await conn.fetchval(f"SELECT currentxp FROM {TABLE_NAME} WHERE userid = {message.author.id}")
-                await conn.execute(f"UPDATE {TABLE_NAME} SET neededxp = {TABLE_NAME}.neededxp - {xp_val} WHERE userid = {message.author.id}")
-                neededXP = await conn.fetchval(f"SELECT neededxp FROM {TABLE_NAME} WHERE userid = {message.author.id}")
+                await conn.execute(f"INSERT INTO {LEVEL_TABLE_NAME} (username, userid, currentxp, neededxp) VALUES ('{message.author.name}', {message.author.id}, {xp_val}, {startingXP})  ON CONFLICT (userid) DO UPDATE SET currentxp = {LEVEL_TABLE_NAME}.currentxp + {xp_val}")
+                xp = await conn.fetchval(f"SELECT currentxp FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
+                await conn.execute(f"UPDATE {LEVEL_TABLE_NAME} SET neededxp = {LEVEL_TABLE_NAME}.neededxp - {xp_val} WHERE userid = {message.author.id}")
+                neededXP = await conn.fetchval(f"SELECT neededxp FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
                 if neededXP <= 0:
-                    await conn.execute(f"UPDATE {TABLE_NAME} SET currentlevel = {TABLE_NAME}.currentlevel + 1 WHERE userid = {message.author.id}")
-                    level = await conn.fetchval(f"SELECT currentlevel FROM {TABLE_NAME} WHERE userid = {message.author.id}")
+                    await conn.execute(f"UPDATE {LEVEL_TABLE_NAME} SET currentlevel = {LEVEL_TABLE_NAME}.currentlevel + 1 WHERE userid = {message.author.id}")
+                    level = await conn.fetchval(f"SELECT currentlevel FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
                     for levelNames in data["levelNames"]:
                         if level >= int(levelNames):
                             levelNameAfterLevelUp = data["levelNames"][levelNames]
                             break
-                    await conn.execute(f"UPDATE {TABLE_NAME} SET levelname = '{levelNameAfterLevelUp}' WHERE userid = {message.author.id}")
+                    await conn.execute(f"UPDATE {LEVEL_TABLE_NAME} SET levelname = '{levelNameAfterLevelUp}' WHERE userid = {message.author.id}")
                     untilLevelUp = int(str(xp)[-2:])
                     untilLevelUp = startingXP * level - untilLevelUp
-                    await conn.execute(f"UPDATE {TABLE_NAME} SET neededxp = {untilLevelUp} WHERE userid = {message.author.id}")
-                    notify = await conn.fetchval(f"SELECT doNotify FROM {TABLE_NAME} WHERE userid = {message.author.id}")
+                    await conn.execute(f"UPDATE {LEVEL_TABLE_NAME} SET neededxp = {untilLevelUp} WHERE userid = {message.author.id}")
+                    notify = await conn.fetchval(f"SELECT doNotify FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
                     if notify:
-                        untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {TABLE_NAME} WHERE userid = {message.author.id}")
+                        untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
                         # Edit the default image to add the text then send it
                         defaultImage = Image.open("./Images/levelImage.png")
                         getAvatar = requests.get(message.author.avatar.url)

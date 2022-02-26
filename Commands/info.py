@@ -29,7 +29,7 @@ DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME")
 DB_PORT = os.environ.get("DB_PORT")
-TABLE_NAME = os.environ.get("TABLE_NAME")
+LEVEL_TABLE_NAME = os.environ.get("LEVEL_TABLE_NAME")
 
 
 class info(commands.Cog):
@@ -44,11 +44,11 @@ class info(commands.Cog):
         accountCreatedAt = f"{user.created_at.strftime('%d/%m/%y')}"
         joinedServerAt = f"{user.joined_at.strftime('%d/%m/%y')}"
         isBoosting = "Yes" if user.premium_since is True else "No"
-        currentLevel = await conn.fetchval(f"SELECT currentlevel FROM {TABLE_NAME} where userid = {user.id}")
-        currentXP = await conn.fetchval(f"SELECT currentxp FROM {TABLE_NAME} where userid = {user.id}")
-        currentLevelName = await conn.fetchval(f"SELECT levelname FROM {TABLE_NAME} where userid = {user.id}")
-        untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {TABLE_NAME} where userid = {user.id}")
-        doNotify = await conn.fetchval(f"SELECT doNotify FROM {TABLE_NAME} where userid = {user.id}")
+        currentLevel = await conn.fetchval(f"SELECT currentlevel FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
+        currentXP = await conn.fetchval(f"SELECT currentxp FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
+        currentLevelName = await conn.fetchval(f"SELECT levelname FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
+        untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
+        doNotify = await conn.fetchval(f"SELECT doNotify FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
         defaultImage = Image.open("./Images/infoImage.png")
         # If the user's avatar is not in the cache, download it
         if not os.path.isfile(f"./Images/avatarCache/{user.id}"):

@@ -22,7 +22,7 @@ DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME")
 DB_PORT = os.environ.get("DB_PORT")
-TABLE_NAME = os.environ.get("TABLE_NAME")
+LEVEL_TABLE_NAME = os.environ.get("LEVEL_TABLE_NAME")
 
 
 class Leaderboard(commands.Cog):
@@ -33,7 +33,7 @@ class Leaderboard(commands.Cog):
     async def leaderboard(self, ctx):
         conn = await asyncpg.connect(f'postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
         global embed
-        res = await conn.fetch(f"SELECT username, currentxp, currentlevel FROM {TABLE_NAME} ORDER BY currentxp DESC")
+        res = await conn.fetch(f"SELECT username, currentxp, currentlevel FROM {LEVEL_TABLE_NAME} ORDER BY currentxp DESC")
         nameList = []
         xpList = []
         levelList = []
