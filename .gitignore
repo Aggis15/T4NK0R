@@ -2,7 +2,7 @@
 ./logs/discordlogs.log
 test.py
 /.idea/
-/Images/
+/Images/AvatarCache/
 /Lavalink.jar
 /application.yml
 /Bungee-Regular.ttf

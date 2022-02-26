@@ -20,6 +20,7 @@ notifiedLiveRole = data["roleIDs"]["notifiedLive"]
 eventsRole = data["roleIDs"]["events"]
 gamersRole = data["roleIDs"]["gamers"]
 votersRole = data["roleIDs"]["voters"]
+messageReactionID = data["messageReactionID"][0]
 
 
 class reactionListener(commands.Cog, name="Reaction Listener"):
@@ -29,7 +30,7 @@ class reactionListener(commands.Cog, name="Reaction Listener"):
     # When someone leaves, log it
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        if payload.message_id == 946903095097569330:
+        if payload.message_id == messageReactionID:
             guild = self.bot.get_guild(payload.guild_id)
             member = guild.get_member(payload.user_id)
             if payload.emoji.name == "Pentagram":
@@ -80,6 +81,62 @@ class reactionListener(commands.Cog, name="Reaction Listener"):
                     await member.add_roles(discord.Object(id=votersRole))
                     await member.send("You have been added to the Voters role!")
                     logger.info(f"{member} has been added to the Voters role!")
+            else:
+                return
+
+    @commands.Cog.listener()
+    async def on_raw_reaction_remove(self, payload):
+        if payload.message_id == messageReactionID:
+            guild = self.bot.get_guild(payload.guild_id)
+            member = guild.get_member(payload.user_id)
+            if payload.emoji.name == "Pentagram":
+                role = discord.utils.find(lambda r: r.id == deepthinkersRole, guild.roles)
+                if not role in member.roles:
+                    return
+                else:
+                    await member.remove_roles(discord.Object(id=deepthinkersRole))
+                    await member.send("You have been removed from the Deep Thinkers role!")
+                    logger.info(f"{member} has been removed from the Deep Thinkers role!")
+            elif payload.emoji.name == "TSELockdown":
+                role = discord.utils.find(lambda r: r.id == lockdownRole, guild.roles)
+                if not role in member.roles:
+                    return
+                else:
+                    await member.remove_roles(discord.Object(id=lockdownRole))
+                    await member.send("You have been removed from the Lockdown role!")
+                    logger.info(f"{member} has been removed from the Lockdown role!")
+            elif payload.emoji.name == "TSEWarning":
+                role = discord.utils.find(lambda r: r.id == notifiedLiveRole, guild.roles)
+                if not role in member.roles:
+                    return
+                else:
+                    await member.remove_roles(discord.Object(id=notifiedLiveRole))
+                    await member.send("You have been removed from the Notified Live role!")
+                    logger.info(f"{member} has been removed from the Notified Live role!")
+            elif payload.emoji.name == "BWEvents":
+                role = discord.utils.find(lambda r: r.id == eventsRole, guild.roles)
+                if not role in member.roles:
+                    return
+                else:
+                    await member.remove_roles(discord.Object(id=eventsRole))
+                    await member.send("You have been removed from the Events role!")
+                    logger.info(f"{member} has been removed from the Events role!")
+            elif payload.emoji.name == "Aces":
+                role = discord.utils.find(lambda r: r.id == gamersRole, guild.roles)
+                if not role in member.roles:
+                    return
+                else:
+                    await member.remove_roles(discord.Object(id=gamersRole))
+                    await member.send("You have been removed from the Gamers role!")
+                    logger.info(f"{member} has been removed from the Gamers role!")
+            elif payload.emoji.name == "VFive":
+                role = discord.utils.find(lambda r: r.id == votersRole, guild.roles)
+                if not role in member.roles:
+                    return
+                else:
+                    await member.remove_roles(discord.Object(id=votersRole))
+                    await member.send("You have been removed from the Voters role!")
+                    logger.info(f"{member} has been removed from the Voters role!")
             else:
                 return
 
