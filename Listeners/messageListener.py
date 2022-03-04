@@ -76,6 +76,9 @@ class MessageListener(commands.Cog):
                     await conn.execute(f"UPDATE {LEVEL_TABLE_NAME} SET neededxp = {untilLevelUp} WHERE userid = {message.author.id}")
                     notify = await conn.fetchval(f"SELECT doNotify FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
                     if notify:
+                        doOverrideLevel = await conn.fetchval(f"SELECT dooverridelevelname FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
+                        if doOverrideLevel is True:
+                            levelNameAfterLevelUp = await conn.fetchval(f"SELECT overridelevelname FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
                         untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {LEVEL_TABLE_NAME} WHERE userid = {message.author.id}")
                         # Edit the default image to add the text then send it
                         defaultImage = Image.open("./Images/levelImage.png")

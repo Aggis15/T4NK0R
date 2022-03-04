@@ -46,7 +46,11 @@ class info(commands.Cog):
         isBoosting = "Yes" if user.premium_since is True else "No"
         currentLevel = await conn.fetchval(f"SELECT currentlevel FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
         currentXP = await conn.fetchval(f"SELECT currentxp FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
-        currentLevelName = await conn.fetchval(f"SELECT levelname FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
+        doOverride = await conn.fetchval(f"SELECT dooverridelevelname FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
+        if doOverride:
+            currentLevelName = await conn.fetchval(f"SELECT overridelevelname FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
+        else:
+            currentLevelName = await conn.fetchval(f"SELECT levelname FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
         untilLevelUp = await conn.fetchval(f"SELECT neededxp FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
         doNotify = await conn.fetchval(f"SELECT doNotify FROM {LEVEL_TABLE_NAME} where userid = {user.id}")
         defaultImage = Image.open("./Images/infoImage.png")
