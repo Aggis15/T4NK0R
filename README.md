@@ -1,6 +1,6 @@
 # Welcome to the T4NK0R repository!
 
-This is a personal bot that is used in a server of a good friend of mines. 
+This is a personal bot that is used in a server of a good friend of mine. 
 
 ## What does this bot do?
 
