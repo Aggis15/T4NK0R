@@ -16,7 +16,7 @@ DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME")
 DB_PORT = os.environ.get("DB_PORT")
-LEVEL_TABLE_NAME = os.environ.get("LEVEL_TABLE_NAME")
+TABLE_NAME = os.environ.get("LEVEL_TABLE_NAME")
 
 
 # Initiate json
@@ -33,9 +33,9 @@ class Notifications(commands.Cog):
     async def notifications(self, ctx, value: Option(str, "Make your choice!", choices=["on", "off"])):
         conn = await asyncpg.connect(f'postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
         if value == "off":
-            await conn.execute(f"UPDATE {LEVEL_TABLE_NAME} SET doNotify = false WHERE userid = {ctx.author.id}")
+            await conn.execute(f"UPDATE {TABLE_NAME} SET doNotify = false WHERE userid = {ctx.author.id}")
         else:
-            await conn.execute(f"UPDATE {LEVEL_TABLE_NAME} SET doNotify = true WHERE userid = {ctx.author.id}")
+            await conn.execute(f"UPDATE {TABLE_NAME} SET doNotify = true WHERE userid = {ctx.author.id}")
         await ctx.respond(f"Notifications have now been turned {value}")
         await conn.close()
         logger.info(f"{ctx.author.name} turned their notifications {value}!")
