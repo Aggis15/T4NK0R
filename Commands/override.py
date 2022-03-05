@@ -54,7 +54,9 @@ class OverrideLevel(commands.Cog):
                     await ctx.respond(f"Override level name set as '{levelname}' for user '{member.name}'!")
         await conn.close()
 
-    @override.error
+        logging.log(f"{ctx.author.name} has overriden the level name for user {member.name} with level name '{levelname}'!")
+
+    @overridelevel.error
     async def override_error(self, ctx, error):
         await ctx.respond(f"`{error}`")
 
