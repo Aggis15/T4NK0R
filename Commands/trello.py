@@ -30,7 +30,7 @@ class Trello(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command(aliases=['bug'], description='Report a bug to the developers.', guild_ids=[guildID])
+    @slash_command(description='Report a bug to the developers.', guild_ids=[guildID])
     async def reportbug(self, ctx, title: Option(str, "Bug title. Must be descriptive but not long", required=True),
                         description: Option(str,
                                             "Please go in detail about what the bug is. You are free to attach links with screenshots (Imgur)",
