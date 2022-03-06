@@ -36,7 +36,9 @@ class rebootBot(commands.Cog):
         verification = await self.bot.wait_for("message", check=check(ctx.author), timeout=20)
         if verification.content == "Yes, I agree to killing the bot!":
             await ctx.respond("Bot is dying. Goodbye.")
-            sys.exit()
+            await self.bot.close()
+        else:
+            await ctx.respond("Interaction failed. Try again")
 
     @shutdownbot.error
     async def shutdown_error(self, ctx, error):
