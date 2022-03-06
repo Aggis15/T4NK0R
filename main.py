@@ -44,9 +44,25 @@ for filename in os.listdir("./Listeners"):
     if filename.endswith(".py"):
         bot.load_extension(f"Listeners.{filename[:-3]}")
 
-for filename in os.listdir("./Commands"):
+for filename in os.listdir("./General"):
     if filename.endswith(".py"):
-        bot.load_extension(f"Commands.{filename[:-3]}")
+        bot.load_extension(f"General.{filename[:-3]}")
+
+for filename in os.listdir("./Admin"):
+    if filename.endswith(".py"):
+        bot.load_extension(f"Admin.{filename[:-3]}")
+
+for filename in os.listdir("./Levels"):
+    if filename.endswith(".py"):
+        bot.load_extension(f"Levels.{filename[:-3]}")
+
+for filename in os.listdir("./Music"):
+    if filename.endswith(".py"):
+        bot.load_extension(f"Music.{filename[:-3]}")
+
+for filename in os.listdir("./Twitch"):
+    if filename.endswith(".py"):
+        bot.load_extension(f"Twitch.{filename[:-3]}")
 
 if __name__ == "__main__":
     bot.run(BOT_TOKEN)
