@@ -285,5 +285,10 @@
     "Oh look, Steve is chasing his dick! - StarDelivery, 2021",
     "Get over here you lazy bumbums or I'll bum bum your wife - StarDelivery, 2021",
     "And remember, we are not horny boys & we don't tolerate fucking - StarDelivery, 2021"
-  ]
+  ],
+  "trelloAPI": {
+    "trelloAPIURL": "https://api.trello.com/1/cards",
+    "trelloBugListID": "6213d750a2dd6e5ec6580a78",
+    "trelloFeatureListID": "61ee4d6918e48051d9849fba"
+  }
 }
