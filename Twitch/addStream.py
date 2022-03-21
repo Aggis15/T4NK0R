@@ -25,7 +25,6 @@ TWITCH_SECRET = os.environ.get('TWITCH_SECRET')
 guildID = data["guildID"][0]
 T4NK0RStaff = data["roleIDs"]["T4NK0RStaff"]
 
-
 class addStream(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -42,11 +41,12 @@ class addStream(commands.Cog):
                 "broadcaster_user_id": userid
             },
             "transport": {
-                "method": "WEBHOOK_URL",
-                "callback": "https://2b64-91-132-132-53.ngrok.io/twitch/live",
-                "secret": TWITCH_SECRET}
+                "method": "webhook",
+                "callback": "https://arinas.me/twitch/live",
+                "secret": "a579c5f06b24f0e61f18b8226d414ed3"}
         }
-        r.post("https://api.twitch.tv/helix/eventsub/subscriptions", headers=headers, json=info_json)
+        test = r.post("https://api.twitch.tv/helix/eventsub/subscriptions", headers=headers, json=info_json)
+        print(test.text)
         await asyncio.sleep(10)
         req = r.get("https://api.twitch.tv/helix/eventsub/subscriptions", headers=headers)
         req = req.json()

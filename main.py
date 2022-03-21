@@ -5,7 +5,6 @@ import json
 import os
 from dotenv import load_dotenv
 import wavelink
-from wavelink.ext import spotify
 load_dotenv()
 
 # Logging

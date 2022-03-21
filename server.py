@@ -8,6 +8,8 @@ import requests as r
 from discord_webhook import DiscordWebhook, DiscordEmbed
 load_dotenv()
 import os
+from waitress import serve
+
 # Public vars
 app = Flask(__name__)
 secret = os.environ.get('TWITCH_SECRET')
@@ -26,7 +28,8 @@ def index():
 @app.route("/twitch/live", methods=["POST"])
 def twitchPost():
     requestJson = request.json
-    if "WEBHOOK_URL_callback_verification" in request.headers["Twitch-Eventsub-Message-Type"]:
+    print(request.headers)
+    if "webhook_callback_verification" in request.headers["Twitch-Eventsub-Message-Type"]:
         response = Response(requestJson["challenge"], status=200)
         response.headers["Content-Type"] = "application/json"
         return response
@@ -79,9 +82,5 @@ def twitchPost():
         return Response(status=403)
 
 
-
-
-
-
 if __name__ == "__main__":
-    app.run(host="localhost", port=8080)
+    serve(app, host="0.0.0.0", port=8080, url_scheme="https")

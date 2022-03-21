@@ -22,18 +22,9 @@ data = json.load(file)
 guildID = data["guildID"][0]
 
 
-class botInfoCommand(commands.Cog):
+class BotInfoCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    #def convert_size(size_bytes, prefix="b"):
-    #    if size_bytes == 0:
-    #        return "0B"
-    #    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
-    #    i = int(math.floor(math.log(size_bytes, 1024)))
-    #    p = math.pow(1024, i)
-    #    s = round(size_bytes / p, 2)
-    #    return "%s %s" % (s, size_name[i])
 
     @slash_command(guild_ids=[guildID], description="Check the bot's ping!")
     async def botinfo(self, ctx):
@@ -76,4 +67,4 @@ class botInfoCommand(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(botInfoCommand(bot))
+    bot.add_cog(BotInfoCommand(bot))

@@ -1,7 +1,9 @@
-Flask==2.0.2
-Pillow==9.0.1
-python-dotenv==0.19.2
-requests==2.27.1
-asyncpg>=0.25.0
-
-wavelink>=1.1.1
+Flask
+Pillow
+python-dotenv
+requests
+asyncpg
+wavelink
+psutil
+py-cord
+python-resize-image
