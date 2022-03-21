@@ -43,7 +43,7 @@ class addStream(commands.Cog):
             "transport": {
                 "method": "webhook",
                 "callback": "https://arinas.me/twitch/live",
-                "secret": "a579c5f06b24f0e61f18b8226d414ed3"}
+                "secret": TWITCH_SECRET}
         }
         test = r.post("https://api.twitch.tv/helix/eventsub/subscriptions", headers=headers, json=info_json)
         print(test.text)
