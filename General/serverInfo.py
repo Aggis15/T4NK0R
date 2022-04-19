@@ -8,7 +8,11 @@ from PIL import Image, ImageDraw, ImageFont
 from resizeimage import resizeimage
 
 # Logging
-logging.basicConfig(filename='./logs/discordlogs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename="./logs/discordlogs.log",
+    filemode="w",
+    format="%(name)s - %(levelname)s - %(message)s",
+)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -24,7 +28,9 @@ class serverInfo(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command(guild_ids=[guildID], description="A command to check the server information!")
+    @slash_command(
+        guild_ids=[guildID], description="A command to check the server information!"
+    )
     async def server(self, ctx):
         guild = ctx.guild
         serverLevel = guild.premium_tier
@@ -41,7 +47,7 @@ class serverInfo(commands.Cog):
         guildAvatarImage = Image.open(f"./Images/avatarCache/{guild.id}.png")
         # Crop the avatar to make it a circle
         width, height = guildAvatarImage.size
-        x = (width - height)
+        x = width - height
         img_cropped = guildAvatarImage.crop((x, 0, x + height, height))
         mask = Image.new("L", img_cropped.size)
         mask_draw = ImageDraw.Draw(mask)
@@ -68,7 +74,9 @@ class serverInfo(commands.Cog):
         defaultImage.save("./Images/serverImageReady.png")
         await ctx.respond(file=discord.File("./Images/serverImageReady.png"))
 
-        logger.info(f"{ctx.author.name} with ID: {ctx.author.id} has used the info slash command")
+        logger.info(
+            f"{ctx.author.name} with ID: {ctx.author.id} has used the info slash command"
+        )
 
     @server.error
     async def server_error(self, ctx, error):

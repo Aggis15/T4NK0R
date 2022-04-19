@@ -12,7 +12,6 @@ guildID = data["guildID"][0]
 
 
 class musicStop(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -20,7 +19,10 @@ class musicStop(commands.Cog):
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         wavelink.NodePool.get_node(identifier=node.identifier)
 
-    @slash_command(guild_ids=[guildID], description="Stop the music! If there is anything in the queue, plays the next song!")
+    @slash_command(
+        guild_ids=[guildID],
+        description="Stop the music! If there is anything in the queue, plays the next song!",
+    )
     async def stop(self, ctx):
         if not ctx.voice_client:
             await ctx.respond("I'm not playing anything right now!")

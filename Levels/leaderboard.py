@@ -7,7 +7,11 @@ import logging
 import json
 
 # Logging
-logging.basicConfig(filename='./logs/discordlogs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename="./logs/discordlogs.log",
+    filemode="w",
+    format="%(name)s - %(levelname)s - %(message)s",
+)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -31,14 +35,22 @@ class Leaderboard(commands.Cog):
 
     @slash_command(description="Show the level leaderboard!", guild_ids=[guildID])
     async def leaderboard(self, ctx):
-        conn = await asyncpg.connect(f'postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
+        conn = await asyncpg.connect(
+            f"postgres://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        )
         global embed
-        res = await conn.fetch(f"SELECT username, currentxp, currentlevel FROM {LEVEL_TABLE_NAME} ORDER BY currentxp DESC")
+        res = await conn.fetch(
+            f"SELECT username, currentxp, currentlevel FROM {LEVEL_TABLE_NAME} ORDER BY currentxp DESC"
+        )
         nameList = []
         xpList = []
         levelList = []
         counter = 0
-        embed = discord.Embed(title="Server Leaderboard", description="**# • Name • XP • Level**", color=discord.Color.blue())
+        embed = discord.Embed(
+            title="Server Leaderboard",
+            description="**# • Name • XP • Level**",
+            color=discord.Color.blue(),
+        )
         for people in res:
             name = people[0]
             xp = people[1]
@@ -47,7 +59,11 @@ class Leaderboard(commands.Cog):
             xpList.append(xp)
             levelList.append(level)
             counter = counter + 1
-            embed.add_field(name="\u200b", value=f"#{counter} • {name} • {xp} • {level}", inline=False)
+            embed.add_field(
+                name="\u200b",
+                value=f"#{counter} • {name} • {xp} • {level}",
+                inline=False,
+            )
         await ctx.respond(embed=embed)
         await conn.close()
 

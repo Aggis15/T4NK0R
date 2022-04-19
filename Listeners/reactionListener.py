@@ -9,7 +9,11 @@ file = open("config.json")
 data = json.load(file)
 
 # Logging
-logging.basicConfig(filename='./logs/discordlogs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename="./logs/discordlogs.log",
+    filemode="w",
+    format="%(name)s - %(levelname)s - %(message)s",
+)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -34,7 +38,9 @@ class reactionListener(commands.Cog, name="Reaction Listener"):
             guild = self.bot.get_guild(payload.guild_id)
             member = guild.get_member(payload.user_id)
             if payload.emoji.name == "Pentagram":
-                role = discord.utils.find(lambda r: r.id == deepthinkersRole, guild.roles)
+                role = discord.utils.find(
+                    lambda r: r.id == deepthinkersRole, guild.roles
+                )
                 if role in member.roles:
                     return
                 else:
@@ -50,7 +56,9 @@ class reactionListener(commands.Cog, name="Reaction Listener"):
                     await member.send("You have been added to the Lockdown role!")
                     logger.info(f"{member} has been added to the Lockdown role!")
             elif payload.emoji.name == "TSEWarning":
-                role = discord.utils.find(lambda r: r.id == notifiedLiveRole, guild.roles)
+                role = discord.utils.find(
+                    lambda r: r.id == notifiedLiveRole, guild.roles
+                )
                 if role in member.roles:
                     return
                 else:
@@ -90,13 +98,19 @@ class reactionListener(commands.Cog, name="Reaction Listener"):
             guild = self.bot.get_guild(payload.guild_id)
             member = guild.get_member(payload.user_id)
             if payload.emoji.name == "Pentagram":
-                role = discord.utils.find(lambda r: r.id == deepthinkersRole, guild.roles)
+                role = discord.utils.find(
+                    lambda r: r.id == deepthinkersRole, guild.roles
+                )
                 if not role in member.roles:
                     return
                 else:
                     await member.remove_roles(discord.Object(id=deepthinkersRole))
-                    await member.send("You have been removed from the Deep Thinkers role!")
-                    logger.info(f"{member} has been removed from the Deep Thinkers role!")
+                    await member.send(
+                        "You have been removed from the Deep Thinkers role!"
+                    )
+                    logger.info(
+                        f"{member} has been removed from the Deep Thinkers role!"
+                    )
             elif payload.emoji.name == "TSELockdown":
                 role = discord.utils.find(lambda r: r.id == lockdownRole, guild.roles)
                 if not role in member.roles:
@@ -106,13 +120,19 @@ class reactionListener(commands.Cog, name="Reaction Listener"):
                     await member.send("You have been removed from the Lockdown role!")
                     logger.info(f"{member} has been removed from the Lockdown role!")
             elif payload.emoji.name == "TSEWarning":
-                role = discord.utils.find(lambda r: r.id == notifiedLiveRole, guild.roles)
+                role = discord.utils.find(
+                    lambda r: r.id == notifiedLiveRole, guild.roles
+                )
                 if not role in member.roles:
                     return
                 else:
                     await member.remove_roles(discord.Object(id=notifiedLiveRole))
-                    await member.send("You have been removed from the Notified Live role!")
-                    logger.info(f"{member} has been removed from the Notified Live role!")
+                    await member.send(
+                        "You have been removed from the Notified Live role!"
+                    )
+                    logger.info(
+                        f"{member} has been removed from the Notified Live role!"
+                    )
             elif payload.emoji.name == "BWEvents":
                 role = discord.utils.find(lambda r: r.id == eventsRole, guild.roles)
                 if not role in member.roles:
@@ -139,6 +159,7 @@ class reactionListener(commands.Cog, name="Reaction Listener"):
                     logger.info(f"{member} has been removed from the Voters role!")
             else:
                 return
+
 
 def setup(bot):
     bot.add_cog(reactionListener(bot))

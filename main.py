@@ -5,10 +5,15 @@ import json
 import os
 from dotenv import load_dotenv
 import wavelink
+
 load_dotenv()
 
 # Logging
-logging.basicConfig(filename='./logs/discordlogs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename="./logs/discordlogs.log",
+    filemode="w",
+    format="%(name)s - %(levelname)s - %(message)s",
+)
 logger = logging.getLogger()
 
 
@@ -24,18 +29,18 @@ prefix = data["prefix"]
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 
+
 @bot.event
 async def on_ready():
     print(f"Bot has successfully started as {bot.user}")
-    await wavelink.NodePool.create_node(bot=bot,
-                                        host='0.0.0.0',
-                                        port=2333,
-                                        password='a579c5f06b24f0e61f18b8226d414ed3')
+    await wavelink.NodePool.create_node(
+        bot=bot, host="0.0.0.0", port=2333, password="a579c5f06b24f0e61f18b8226d414ed3"
+    )
+
 
 @bot.event
 async def on_wavelink_node_ready(node: wavelink.Node):
     print(f"Node {node.identifier} is ready!")
-
 
 
 # Loads the cogs

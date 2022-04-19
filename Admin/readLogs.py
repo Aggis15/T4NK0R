@@ -16,7 +16,10 @@ class ReadLogs(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command(guild_ids=[guildID], description="Get a copy of the log file. Useful for troubleshooting")
+    @slash_command(
+        guild_ids=[guildID],
+        description="Get a copy of the log file. Useful for troubleshooting",
+    )
     @permissions.has_role(T4NK0RStaff)
     async def readlogs(self, ctx):
         await ctx.respond(file=discord.File("./logs/discordlogs.log"))
@@ -24,6 +27,7 @@ class ReadLogs(commands.Cog):
     @readlogs.error
     async def readlogs_error(self, ctx, error):
         await ctx.respond(f"`{error}`")
+
 
 def setup(bot):
     bot.add_cog(ReadLogs(bot))

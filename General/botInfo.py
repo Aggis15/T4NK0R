@@ -10,7 +10,11 @@ import math
 from datetime import datetime
 
 # Logging
-logging.basicConfig(filename='./logs/discordlogs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename="./logs/discordlogs.log",
+    filemode="w",
+    format="%(name)s - %(levelname)s - %(message)s",
+)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -42,7 +46,9 @@ class BotInfoCommand(commands.Cog):
         bootTime = datetime.fromtimestamp(psutil.boot_time())
         ping = round(self.bot.latency * 1000)
         # Define the embed
-        embed = discord.Embed(title="Bot Info", description=f"""
+        embed = discord.Embed(
+            title="Bot Info",
+            description=f"""
         **System:**
         - **System:** `{system}`
         - **Version:** `{version}`
@@ -57,9 +63,13 @@ class BotInfoCommand(commands.Cog):
         - **Available:** `{availableMemory}`
         **Boot Time:** `{bootTime}`
         **Bot Ping:** `{ping}ms`
-        """, color=0x00ff00)
+        """,
+            color=0x00FF00,
+        )
         await ctx.respond(embed=embed)
-        logger.info(f"{ctx.author.name} with ID: {ctx.author.id} has checked the bot ping!")
+        logger.info(
+            f"{ctx.author.name} with ID: {ctx.author.id} has checked the bot ping!"
+        )
 
     @botinfo.error
     async def ping_error(self, ctx, error):

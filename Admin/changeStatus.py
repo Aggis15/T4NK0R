@@ -11,7 +11,11 @@ file = open("config.json")
 data = json.load(file)
 
 # Logging
-logging.basicConfig(filename='./logs/discordlogs.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename="./logs/discordlogs.log",
+    filemode="w",
+    format="%(name)s - %(levelname)s - %(message)s",
+)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -37,15 +41,30 @@ class Status(commands.Cog):
         logger.info("Waiting before starting status loop.")
         await self.bot.wait_until_ready()
 
-    @slash_command(guild_ids=[guildID], description="A way to change the status on the bot! Usable only by staff.")
+    @slash_command(
+        guild_ids=[guildID],
+        description="A way to change the status on the bot! Usable only by staff.",
+    )
     @permissions.has_role(T4NK0RStaff)
-    async def changestatus(self, ctx, status: Option(str, description="Your status name", required=False), time: Option(int, required=False, description="How long the status should last, in seconds. Default is 4 hours.", default=14400)):
+    async def changestatus(
+        self,
+        ctx,
+        status: Option(str, description="Your status name", required=False),
+        time: Option(
+            int,
+            required=False,
+            description="How long the status should last, in seconds. Default is 4 hours.",
+            default=14400,
+        ),
+    ):
         if status is None:
             status = r.choice(statuses)
         if self.statusloop.is_running() is True:
             self.statusloop.cancel()
             await self.bot.change_presence(activity=discord.Game(name=status))
-            await ctx.respond(f"Status has been successfully changed to {status} for {time} seconds!")
+            await ctx.respond(
+                f"Status has been successfully changed to {status} for {time} seconds!"
+            )
             await asyncio.sleep(float(time))
             await self.statusloop.start()
         else:
@@ -54,6 +73,7 @@ class Status(commands.Cog):
     @statusloop.error
     async def statusloop_error(self, ctx, error):
         await ctx.respond(f"`{error}`")
+
 
 def setup(bot):
     bot.add_cog(Status(bot))

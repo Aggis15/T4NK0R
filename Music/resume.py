@@ -12,7 +12,6 @@ guildID = data["guildID"][0]
 
 
 class musicResume(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -28,6 +27,7 @@ class musicResume(commands.Cog):
             vc: wavelink.Player = ctx.voice_client
             await vc.resume()
             await ctx.respond("Resumed the song!")
+
 
 def setup(bot):
     bot.add_cog(musicResume(bot))
